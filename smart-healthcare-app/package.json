@@ -1,0 +1,33 @@
+{
+  "name": "smart-healthcare-app",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "services/*",
+    "frontend/*"
+  ],
+  "scripts": {
+    "start:auth": "npm run start:dev -w services/user-management-service",
+    "start:doctor-verify": "npm run start:dev -w services/doctor-verification-service",
+    "start:all-services": "concurrently \"npm run start:auth\" \"npm run start:doctor-verify\"",
+    "typeorm:auth": "cross-env TS_NODE_PROJECT=./services/user-management-service/tsconfig.json NODE_OPTIONS=\"-r dotenv/config\" DOTENV_CONFIG_PATH=./.env.development node --require ts-node/register --require tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./services/user-management-service/src/data-source.ts",
+    "db:migrate:auth": "npm run typeorm:auth migration:run",
+    "db:generate:auth": "npm run typeorm:auth migration:generate",
+    "db:revert:auth": "npm run typeorm:auth migration:revert",
+    "typeorm:doctor-verify": "cross-env TS_NODE_PROJECT=./services/doctor-verification-service/tsconfig.json NODE_OPTIONS=\"-r dotenv/config\" DOTENV_CONFIG_PATH=./.env.development node --require ts-node/register --require tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./services/doctor-verification-service/src/data-source.ts",
+    "db:migrate:doctor-verify": "npm run typeorm:doctor-verify migration:run",
+    "db:generate:doctor-verify": "npm run typeorm:doctor-verify migration:generate",
+    "db:revert:doctor-verify": "npm run typeorm:doctor-verify migration:revert"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "dotenv": "^17.2.1",
+    "dotenv-cli": "^10.0.0",
+    "reflect-metadata": "^0.1.13",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
+    "typeorm": "^0.3.17",
+    "typescript": "^5.x.x"
+  }
+}
